@@ -1,3 +1,0 @@
-"""API IDs"""
-APPID = "0C6BC584E8C304646E3D6820E" # TriMet APP ID
-API_KEY = "AIzaSyD4CC5KopjBoBHjQp2q2w9yfNqUukF2cWo" # Google Static Maps Key
