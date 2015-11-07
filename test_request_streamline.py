@@ -7,8 +7,6 @@ import requests
 import json
 from hidden import APPID
 
-#APP ID is 0C6BC584E8C304646E3D6820E
-# Google Static Maps Key:   
 def trimet():
 	"""
 	Using a valid AppID, extracts the route, vehicle number, and lat/long 
