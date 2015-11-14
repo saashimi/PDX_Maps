@@ -2,7 +2,6 @@ var map = null;
 var trafficLayer=new google.maps.TrafficLayer();
 
 
-
 function trimet() {
   var url = "https://developer.trimet.org/ws/v2/vehicles/appID=" 
   var dataOut = [];
@@ -12,13 +11,12 @@ function trimet() {
     $.each(data, function(index, value) {
       innerData = data[index];
       $.each(innerData, function(index1, value1) {
-        if (index1 === "routeNumber" && value1 === 8) {
+        if (index1 === "routeNumber" && value1 === 35) {
           var coord = [innerData.latitude, innerData.longitude];
           dataOut.push(coord);
         }
       });
     });
-  //console.log(dataOut);
   google.maps.event.addDomListener(window, 'load', initialize(dataOut));   
   });
 };
@@ -70,6 +68,9 @@ function initialize(dataIn) {
         position: position,
         map: map
     });
+  
+//  map.data.loadGeoJson('https://rawgit.com/saashimi/PDX_Maps/master/35_route.geojson');
+
   }
   check();
 };
