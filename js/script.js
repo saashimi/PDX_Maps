@@ -69,7 +69,7 @@ function initialize(dataIn) {
         map: map
     });
   
-//  map.data.loadGeoJson('https://rawgit.com/saashimi/PDX_Maps/master/35_route.geojson');
+  map.data.loadGeoJson('https://rawgit.com/saashimi/PDX_Maps/master/35_route.geojson');
 
   }
   check();
