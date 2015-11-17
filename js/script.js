@@ -1,17 +1,20 @@
+//----------------------------------------------------------------------------//
 var map = null;    
 var trafficLayer=new google.maps.TrafficLayer();
+//----------------------------------------------------------------------------//
 
-
-function trimet() {
+function trimet(passRouteInput) {
+  console.log("in trimet:" + passRouteInput);
   var url = "https://developer.trimet.org/ws/v2/vehicles/appID=" 
-  var dataOut = [];
+  var dataOut = []; // This is a list of coordinates.
   var innerData;
   $.post(url + APPID, function(data) {
   data = data.resultSet.vehicle;
-    $.each(data, function(index, value) {
+    $.each(data, function(index, value) { // Key into the inner JSON
       innerData = data[index];
       $.each(innerData, function(index1, value1) {
-        if (index1 === "routeNumber" && value1 === 35) {
+        if (index1 === "routeNumber" && value1 === Number(passRouteInput)) { // replace this with the
+                                                         // dropdown
           var coord = [innerData.latitude, innerData.longitude];
           dataOut.push(coord);
         }
@@ -69,11 +72,18 @@ function initialize(dataIn) {
         map: map
     });
   
-  map.data.loadGeoJson('https://rawgit.com/saashimi/PDX_Maps/master/35_route.geojson');
+//  map.data.loadGeoJson('https://cdn.rawgit.com/saashimi/PDX_Maps/master/35_route.geojson');
 
   }
   check();
-};
+
+  $("#mapInput").submit(function(e) {
+    var passRouteInput = $("input[name=routeInput]").val();
+    console.log(passRouteInput);
+    e.preventDefault();
+    trimet(passRouteInput);
+  })
+}; // End initialize()
 
 function check() {
   if (document.getElementById('traffic').checked) {
@@ -83,7 +93,9 @@ function check() {
   }
 }
 
-trimet();
+
+
+trimet(null);
 
 
 
