@@ -1,10 +1,13 @@
-//----------------------------------------------------------------------------//
+//----Global vars for google maps traffic layers to work----------------------//
 var map = null;    
 var trafficLayer=new google.maps.TrafficLayer();
 //----------------------------------------------------------------------------//
 
 function trimet(passRouteInput) {
-  console.log("in trimet:" + passRouteInput);
+  //Accesses the TriMet API for live vehicle location info.
+  //Input:APPID from hidden file.
+  //Output: A coordinate pair in an array. E.g. [45.5200, -122.6819]
+ 
   var url = "https://developer.trimet.org/ws/v2/vehicles/appID=" 
   var dataOut = []; // This is a list of coordinates.
   var innerData;
@@ -24,6 +27,15 @@ function trimet(passRouteInput) {
   });
 };
 
+/*function check() {
+  // Adds checkbox for live google traffic info.
+  if (document.getElementById('traffic').checked) {
+    trafficLayer.setMap(map);
+  } else {
+    trafficLayer.setMap(null);
+  }
+}*/
+
 function initialize(dataIn) {
   
   var styles = [
@@ -32,20 +44,15 @@ function initialize(dataIn) {
         //{hue : "#084C8D" },
         {saturation : -75}
       ]
-    },{
+    },
+    {
         featureType: "road",
         elementType: "geometry",
         stylers: [
           {lightness : 100}
           //{visibility : "on"}
-        ]
-    }/*,{
-        featureType: "road",
-        elementType: "labels",
-        stylers: [
-          {visibility : "off"}
-        ]
-    }*/
+      ]
+    }
   ];
 
   var mapProp = {
@@ -55,27 +62,28 @@ function initialize(dataIn) {
       mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'desaturated']
     }
   };
-  map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+  
+  map=new google.maps.Map(document.getElementById("map-canvas"),mapProp);
   var mapType=new google.maps.StyledMapType(styles, {name : 'Desaturated'});
   map.mapTypes.set('desaturated', mapType);
   map.setMapTypeId('desaturated');
 
-  var markers = dataIn;
- // trafficLayer.setMap(null);
+  var markerData = dataIn;
 
   // refactor for JQuery later
-  for( i = 0; i < markers.length; i++ ) {
-    var position = new google.maps.LatLng(markers[i][0], markers[i][1]);
+  for( i = 0; i < markerData.length; i++ ) {
+    var position = new google.maps.LatLng(markerData[i][0], markerData[i][1]);
     //bounds.extend(position);
     marker = new google.maps.Marker({
         position: position,
-        map: map
+        map: map,
+        animation: google.maps.Animation.DROP
     });
   
-//  map.data.loadGeoJson('https://cdn.rawgit.com/saashimi/PDX_Maps/master/35_route.geojson');
+//map.data.loadGeoJson('https://cdn.rawgit.com/saashimi/PDX_Maps/master/35_route.geojson');
 
   }
-  check();
+  /*check();*/
 
   $("#mapInput").submit(function(e) {
     var passRouteInput = $("input[name=routeInput]").val();
@@ -85,17 +93,10 @@ function initialize(dataIn) {
   })
 }; // End initialize()
 
-function check() {
-  if (document.getElementById('traffic').checked) {
-    trafficLayer.setMap(map);
-  } else {
-    trafficLayer.setMap(null);
-  }
-}
 
 
-
-trimet(null);
+trimet("x"); //clears out any lingering map markers from cache by entering an 
+             //invalid route.
 
 
 
