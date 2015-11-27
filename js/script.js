@@ -20,10 +20,10 @@ function trimet(passRouteInput) {
                                                          // dropdown
           var coord = [innerData.latitude, innerData.longitude];
           dataOut.push(coord);
+          displayMarkers(dataOut);
         } 
       });
     });
-  google.maps.event.addDomListener(window, 'load', initialize(dataOut));   
   });
 };
 
@@ -33,6 +33,26 @@ function check() {
     trafficLayer.setMap(map);
   } else {
     trafficLayer.setMap(null);
+  }
+}
+
+function displayMarkers(dataIn) {
+  var markerData = dataIn;
+
+  // refactor for JQuery later
+  for( i = 0; i < markerData.length; i++ ) {
+    var position = new google.maps.LatLng(markerData[i][0], markerData[i][1]);
+    //bounds.extend(position);
+    marker = new google.maps.Marker({
+        position: position,
+        map: map,
+        animation: google.maps.Animation.DROP
+    });
+  //Zooms in on marker upon click.
+  google.maps.event.addListener(marker, 'click', function() {
+  map.panTo(this.getPosition());
+  map.setZoom(15);
+  });  
   }
 }
 
@@ -59,7 +79,7 @@ function initialize(dataIn) {
     center:new google.maps.LatLng(45.5200,-122.6819),
     zoom:11,
     mapTypeControlOptions: {  
-      mapTypeIds: [/*google.maps.MapTypeId.ROADMAP,*/ 'desaturated']
+      mapTypeIds: [/*google.maps.MapTypeId.ROADMAP, 'desaturated'*/]
     }
   };
   
@@ -68,27 +88,8 @@ function initialize(dataIn) {
   map.mapTypes.set('desaturated', mapType);
   map.setMapTypeId('desaturated');
 
-  var markerData = dataIn;
-
-  // refactor for JQuery later
-  for( i = 0; i < markerData.length; i++ ) {
-    var position = new google.maps.LatLng(markerData[i][0], markerData[i][1]);
-    //bounds.extend(position);
-    marker = new google.maps.Marker({
-        position: position,
-        map: map,
-        animation: google.maps.Animation.DROP
-    });
-  
 //map.data.loadGeoJson('https://cdn.rawgit.com/saashimi/PDX_Maps/master/35_route.geojson');
 
-  google.maps.event.addListener(marker, 'click', function() {
-  map.panTo(this.getPosition());
-  map.setZoom(15);
-  });  
-
-  }
-  
   check();
   
   $("#routes").change(function() {
@@ -105,8 +106,10 @@ function initialize(dataIn) {
   })*/
 }; // End initialize()
 
-trimet("x"); //clears out any lingering map markers from cache by entering an 
-             //invalid route.
+google.maps.event.addDomListener(window, 'load', initialize);   
 
+/*trimet("x"); //clears out any lingering map markers from cache by entering an 
+             //invalid route.
+*/
 
 
