@@ -20,24 +20,24 @@ function trimet(passRouteInput) {
                                                          // dropdown
           var coord = [innerData.latitude, innerData.longitude];
           dataOut.push(coord);
-        }
+        } 
       });
     });
   google.maps.event.addDomListener(window, 'load', initialize(dataOut));   
   });
 };
 
-/*function check() {
+function check() {
   // Adds checkbox for live google traffic info.
   if (document.getElementById('traffic').checked) {
     trafficLayer.setMap(map);
   } else {
     trafficLayer.setMap(null);
   }
-}*/
+}
 
 function initialize(dataIn) {
-  
+  //Initializes the Google Map. First defines styles.
   var styles = [
     {
        stylers: [
@@ -54,12 +54,12 @@ function initialize(dataIn) {
       ]
     }
   ];
-
+  // Sets the desaturated style (defined above) to desaturated.
   var mapProp = {
     center:new google.maps.LatLng(45.5200,-122.6819),
     zoom:11,
     mapTypeControlOptions: {  
-      mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'desaturated']
+      mapTypeIds: [/*google.maps.MapTypeId.ROADMAP,*/ 'desaturated']
     }
   };
   
@@ -82,18 +82,28 @@ function initialize(dataIn) {
   
 //map.data.loadGeoJson('https://cdn.rawgit.com/saashimi/PDX_Maps/master/35_route.geojson');
 
-  }
-  /*check();*/
+  google.maps.event.addListener(marker, 'click', function() {
+  map.panTo(this.getPosition());
+  map.setZoom(15);
+  });  
 
-  $("#mapInput").submit(function(e) {
+  }
+  
+  check();
+  
+  $("#routes").change(function() {
+    var passRouteInput = $(this).val();
+    console.log(passRouteInput);
+    trimet(passRouteInput);
+  })
+
+/*  $("#mapInput").submit(function(e) {
     var passRouteInput = $("input[name=routeInput]").val();
     console.log(passRouteInput);
     e.preventDefault();
     trimet(passRouteInput);
-  })
+  })*/
 }; // End initialize()
-
-
 
 trimet("x"); //clears out any lingering map markers from cache by entering an 
              //invalid route.
